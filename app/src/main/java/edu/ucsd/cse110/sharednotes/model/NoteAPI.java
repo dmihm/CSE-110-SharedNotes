@@ -8,11 +8,15 @@ import androidx.annotation.WorkerThread;
 
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import okhttp3.Call;
+import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 
 public class NoteAPI {
     // TODO: Implement the API using OkHttp!
@@ -25,10 +29,26 @@ public class NoteAPI {
 
     private OkHttpClient client;
 
-    public NoteAPI() {
-        this.client = new OkHttpClient();
-    }
+    public NoteAPI() {this.client = new OkHttpClient();}
+    @WorkerThread
+    public void getNote() throws IOException {
+        Request request = new Request.Builder()
+                .url("https://api.example.com/user/123")
+                .addHeader("Authorization", "Bearer <your_access_token>")
+                .build();
+        Call call = client.newCall(request);
+        Response response = call.execute();
 
+        if (response.isSuccessful()) {
+            String responseBody = response.body().string();
+            Headers headers = response.headers();
+            int statusCode = response.code();
+
+            // Handle the response...
+        } else {
+            // Handle the error...
+        }
+    }
     public static NoteAPI provide() {
         if (instance == null) {
             instance = new NoteAPI();
